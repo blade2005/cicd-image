@@ -18,3 +18,10 @@ jobs:
           docker_username: blade2005
           docker_password: ${{ secrets.DOCKER_SECRET }}
         if: github.ref == 'refs/heads/main'
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3.4.2
+        if: github.ref == 'refs/heads/main'
+        with:
+          username: blade2005
+          password: ${{ secrets.DOCKER_SECRET }}
+          repository: blade2005/ci-cd-image
