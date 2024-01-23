@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ci-cd-image:$(date +%s)
+      - name: Docker Build Tag Publish
+        uses: bitovi/github-actions-docker-publish@v1.0.7
+        with:
+          sha: true
+          checkout: false
+          docker_username: blade2005
+          docker_password: ${{ secrets.DOCKER_SECRET }}
+        if: github.ref == 'refs/heads/main'
