@@ -1,5 +1,7 @@
 FROM debian:stable-slim as base
 
+ENV IMAGE_VERSION 0.0.6
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV HOME /root
@@ -49,20 +51,20 @@ ENV PATH "$HOME/.local/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 ENV DOCKER_COMPOSE_VERSION 1.29.2
 
 # Pyenv
-RUN bash -c "$(curl https://pyenv.run)" --
+RUN bash -c "$(curl -s https://pyenv.run)" --
 RUN pyenv install ${PYENV_VERSION} && pyenv global ${PYENV_VERSION}
-RUN python --version && pip --version 
+RUN python --version && pip --version
 
 # NVM
 RUN mkdir $NVM_DIR && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh | bash && \
+    curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh | bash && \
     . $NVM_DIR/nvm.sh && \
     nvm install $NODE_VERSION && \
     nvm alias default $NODE_VERSION && \
     nvm use default
 
 # AWS CLI
-RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
+RUN curl -s https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
     unzip -q awscliv2.zip && \
     ./aws/install && \
     rm -rf aws awscliv2.zip && \
@@ -73,15 +75,11 @@ RUN curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE
     chmod +x /usr/local/bin/docker-compose
 
 # Task
-RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin $TASK_VERSION && task --version
+RUN sh -c "$(curl -s --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin $TASK_VERSION && task --version
 
 RUN pip install pipx && pipx ensurepath && pipx install pre-commit==${PRE_COMMIT_VERSION} && pre-commit --version
 
 RUN curl -sSL https://install.python-poetry.org | python3 - && poetry --version
-
-RUN apt-get purge '*-dev' -y && apt-get autoremove -y
-RUN rm -rf /var/lib/{apt,dpkg,cache,log}/
-RUN rm -rf /tmp ~/.cache
 
 FROM scratch
 COPY --from=base / /
