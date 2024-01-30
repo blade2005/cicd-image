@@ -26,7 +26,8 @@ RUN apt-get install -y \
     liblzma-dev \
     python3-openssl \
     git \
-    unzip
+    unzip \
+    ca-certificates
 
 # Task
 ENV TASK_VERSION "v3.33.1"
@@ -46,9 +47,6 @@ ENV NODE_VERSION 18
 ENV NVM_VERSION v0.39.3
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH "$HOME/.local/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
-
-# Compose
-ENV DOCKER_COMPOSE_VERSION 1.29.2
 
 # Pyenv
 RUN bash -c "$(curl -s https://pyenv.run)" --
@@ -70,9 +68,9 @@ RUN curl -s https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2
     rm -rf aws awscliv2.zip && \
     aws --version
 
-# Compose
-RUN curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose
+# Docker
+RUN sh -c "$(curl -fsSL https://get.docker.com)" \
+    && ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
 
 # Task
 RUN sh -c "$(curl -s --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin $TASK_VERSION && task --version

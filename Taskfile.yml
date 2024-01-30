@@ -1,12 +1,12 @@
-version: "3"
+version: '3'
 tasks:
   default:
     aliases:
       - build
     desc: Build container
-    cmd: docker build -t ci-cd-image - < Dockerfile
+    cmd: docker build -t blade2005/ci-cd-image:latest - < Dockerfile
     silent: true
 
   test:
     desc: Ensure tools are accessible in the image
-    cmd: docker run --rm ci-cd-image bash -ce '. $NVM_DIR/nvm.sh; echo $PATH;set -x;poetry --version; aws --version; docker-compose --version; pyenv --version; python --version; task --version; pipx --version; pre-commit --version; npm version; set +x;echo 'nvm --version';nvm --version'
+    cmd: docker run --rm blade2005/ci-cd-image:latest bash -ce '. $NVM_DIR/nvm.sh; echo $PATH;set -x;poetry --version; aws --version; docker-compose --version; pyenv --version; python --version; task --version; pipx --version; pre-commit --version; npm version; sam --version; docker --version;set +x;echo 'nvm --version';nvm --version;'
