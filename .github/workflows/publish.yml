@@ -7,21 +7,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ci-cd-image:$(date +%s)
       - name: Docker Build Tag Publish
         uses: bitovi/github-actions-docker-publish@v1.0.7
         with:
-          sha: true
-          checkout: false
+          use_sha: true
+          checkout: true
           docker_username: blade2005
           docker_password: ${{ secrets.DOCKER_SECRET }}
+          org_name: blade2005
+          repo_name: ci-cd-image
+          use_latest: true
         if: github.ref == 'refs/heads/main'
-      # - name: Docker Hub Description
-      #   uses: peter-evans/dockerhub-description@v3.4.2
-      #   if: github.ref == 'refs/heads/main'
-      #   with:
-      #     username: blade2005
-      #     password: ${{ secrets.DOCKER_SECRET }}
-      #     repository: blade2005/ci-cd-image
