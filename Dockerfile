@@ -81,6 +81,11 @@ RUN pip install pipx && pipx ensurepath && pipx install pre-commit==${PRE_COMMIT
 
 RUN curl -sSL https://install.python-poetry.org | python3 - && poetry --version
 
+RUN wget -q https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip \
+    && unzip -q aws-sam-cli-linux-x86_64.zip -d sam-installation \
+    && ./sam-installation/install \
+    && rm -rf sam-installation aws-sam-cli-linux-x86_64.zip
+
 FROM scratch
 COPY --from=base / /
 ENV HOME /root
