@@ -10,6 +10,7 @@ Image contains:
 - taskfile
 - nvm
 - node 18
+- nvshim
 - pyenv
 - python 3.11.7
 - pipx

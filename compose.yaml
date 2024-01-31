@@ -4,7 +4,4 @@ services:
     build: .
     volumes:
       - ./tests:/app
-    entrypoint:
-      - /bin/bash
-      - --login
-      - ./test.sh
+    command: ./test.sh

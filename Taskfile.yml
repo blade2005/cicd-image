@@ -9,4 +9,4 @@ tasks:
 
   test:
     desc: Ensure tools are accessible in the image
-    cmd: docker compose up ci-cd
+    cmd: docker compose up --build --abort-on-container-exit ci-cd

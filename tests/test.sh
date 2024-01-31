@@ -9,11 +9,11 @@ python --version
 task --version
 pipx --version
 pre-commit --version
-npm version
 sam --version
 docker --version
 type -t nvm
 type -t npx
+npm version
 set +x
 echo 'nvm --version'
 nvm --version

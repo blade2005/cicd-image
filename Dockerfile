@@ -49,9 +49,13 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH "$HOME/.local/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 
 # Pyenv
-RUN curl -s -o- https://pyenv.run | bash
-RUN pyenv install ${PYENV_VERSION} && pyenv global ${PYENV_VERSION}
-RUN python --version && pip --version
+RUN curl -s -o- https://pyenv.run | bash \
+    && pyenv install ${PYENV_VERSION} \
+    && pyenv global ${PYENV_VERSION} \
+    && python --version \
+    && pip --version \
+    && pip install pipx \
+    && pipx ensurepath
 
 # NVM
 RUN mkdir $NVM_DIR && \
@@ -59,7 +63,8 @@ RUN mkdir $NVM_DIR && \
     . $NVM_DIR/nvm.sh && \
     nvm install $NODE_VERSION && \
     nvm alias default $NODE_VERSION && \
-    nvm use default
+    nvm use default && \
+    pipx install git+https://github.com/iamogbz/nvshim.git
 
 # AWS CLI
 RUN curl -s https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
@@ -73,11 +78,14 @@ RUN sh -c "$(curl -fsSL https://get.docker.com)" \
     && ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
 
 # Task
-RUN sh -c "$(curl -s --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin $TASK_VERSION && task --version
+RUN sh -c "$(curl -s --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin $TASK_VERSION \
+    && task --version
 
-RUN pip install pipx && pipx ensurepath && pipx install pre-commit==${PRE_COMMIT_VERSION} && pre-commit --version
+RUN pipx install pre-commit==${PRE_COMMIT_VERSION} \
+    && pre-commit --version
 
-RUN curl -sSL https://install.python-poetry.org | python3 - && poetry --version
+RUN curl -sSL https://install.python-poetry.org | python3 - \
+    && poetry --version
 
 RUN wget -q https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip \
     && unzip -q aws-sam-cli-linux-x86_64.zip -d sam-installation \
@@ -91,5 +99,5 @@ ENV PYENV_VERSION 3.11.7
 ENV PYENV_ROOT "/pyenv"
 ENV NVM_DIR /usr/local/nvm
 ENV PATH "$HOME/.local/bin:$PYENV_ROOT/bin:${PYENV_ROOT}/shims:$PATH"
-SHELL ["/bin/bash", "--login", "-c"]
+SHELL ["/bin/bash", "--login"]
 WORKDIR /app
