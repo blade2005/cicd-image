@@ -49,7 +49,7 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH "$HOME/.local/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 
 # Pyenv
-RUN bash -c "$(curl -s https://pyenv.run)" --
+RUN curl -s -o- https://pyenv.run | bash
 RUN pyenv install ${PYENV_VERSION} && pyenv global ${PYENV_VERSION}
 RUN python --version && pip --version
 
@@ -91,3 +91,5 @@ ENV PYENV_VERSION 3.11.7
 ENV PYENV_ROOT "/pyenv"
 ENV NVM_DIR /usr/local/nvm
 ENV PATH "$HOME/.local/bin:$PYENV_ROOT/bin:${PYENV_ROOT}/shims:$PATH"
+SHELL ["/bin/bash", "--login", "-c"]
+WORKDIR /app
