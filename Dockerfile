@@ -92,6 +92,8 @@ RUN wget -q https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-
     && ./sam-installation/install \
     && rm -rf sam-installation aws-sam-cli-linux-x86_64.zip
 
+RUN curl --proto '=https' --tlsv1.2 -fsSL https://static.pantsbuild.org/setup/get-pants.sh | bash
+
 FROM scratch
 COPY --from=base / /
 ENV HOME /root
